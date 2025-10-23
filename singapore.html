@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V2Ray VPN Package Selection</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Your existing CSS remains the same */
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --card-bg: #ffffff;
+      --gradient-start: #4361ee;
+      --gradient-end: #3a0ca3;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --card-radius: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: var(--light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 15px;
+      background: linear-gradient(to right, #00b4db, #0083b0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: fadeInDown 1s ease;
+      position: relative;
+      display: inline-block;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(to right, var(--accent), #00b4db);
+      border-radius: 2px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #a8b2d1;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .form-container {
+      background: #1e2a3a;
+      border-radius: var(--card-radius);
+      padding: 30px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #2d3746;
+    }
+
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, #00b4db, #0083b0);
+    }
+
+    .selected-package {
+      background: #2d3746;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-weight: 600;
+      color: #e2e8f0;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    .form-group input, 
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #2d3746;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #2d3746;
+      color: #e2e8f0;
+    }
+
+    .form-group input:focus, 
+    .form-group select:focus {
+      outline: none;
+      border-color: #00b4db;
+      box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.1);
+    }
+
+    .provider-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .provider-option {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #2d3746;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #2d3746;
+    }
+
+    .provider-option:hover {
+      border-color: #00b4db;
+    }
+
+    .provider-option.selected {
+      border-color: #00b4db;
+      background-color: rgba(0, 180, 219, 0.05);
+    }
+
+    .provider-option input {
+      display: none;
+    }
+
+    .provider-option label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      cursor: pointer;
+      width: 100%;
+      color: #e2e8f0;
+    }
+
+    .provider-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .airtel { background-color: #E60000; }
+    .dialog { background-color: #FF6B00; }
+    .mobitel { background-color: #0052CC; }
+    .hutch { background-color: #800080; }
+
+    .package-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .package-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 10px;
+      border: 1px solid #2d3746;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      background: #2d3746;
+    }
+
+    .package-option:hover {
+      border-color: #00b4db;
+    }
+
+    .package-option.selected {
+      border-color: #00b4db;
+      background-color: rgba(0, 180, 219, 0.05);
+    }
+
+    .package-option input {
+      display: none;
+    }
+
+    .package-option label {
+      margin: 0;
+      cursor: pointer;
+      width: 100%;
+      color: #e2e8f0;
+    }
+
+    .package-option .data-amount {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .package-option .data-price {
+      font-size: 1rem;
+      color: #00b4db;
+      font-weight: 600;
+    }
+
+    .airtel-zero-packages {
+      display: none;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px dashed #2d3746;
+    }
+
+    .airtel-zero-packages h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #E60000;
+      text-align: center;
+    }
+
+    .selected-price-display {
+      background: #2d3746;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #00b4db;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin: 12px 0;
+      padding: 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      gap: 10px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(to right, #00b4db, #0083b0);
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(to right, #0083b0, #006a8e);
+      transform: translateY(-2px);
+    }
+
+    .close-btn {
+      background: #2d3746;
+      color: #a8b2d1;
+    }
+
+    .close-btn:hover {
+      background: #3a4557;
+      transform: translateY(-2px);
+    }
+
+    /* Loading indicator */
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .loading-spinner {
+      border: 4px solid #2d3746;
+      border-top: 4px solid #00b4db;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Error message */
+    .error-message {
+      color: #f56565;
+      background-color: rgba(245, 101, 101, 0.1);
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    /* Confirmation Modal */
+    .confirmation-modal {
+      display: none;
+      position: fixed;
+      z-index: 1100;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .confirmation-content {
+      background: #1e2a3a;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 450px;
+      animation: modalFadeIn 0.5s ease;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid #2d3746;
+    }
+
+    .confirmation-icon {
+      font-size: 4rem;
+      color: #00b4db;
+      margin-bottom: 20px;
+    }
+
+    .confirmation-details {
+      background: #2d3746;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .confirmation-details p {
+      margin: 8px 0;
+      color: #e2e8f0;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Privacy Notice */
+    .privacy-notice {
+      background: rgba(0, 180, 219, 0.1);
+      border: 1px solid #00b4db;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .privacy-notice i {
+      color: #00b4db;
+      margin-right: 8px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
+      }
+      
+      .form-container {
+        padding: 20px;
+      }
+      
+      .provider-options, .package-options {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>V2Ray VPN Package Selection</h1>
+      <p class="subtitle">Complete the form below to select your preferred V2Ray VPN package and data plan.</p>
+    </div>
+    
+    <div class="form-container">
+      <div class="privacy-notice">
+        <i class="fas fa-shield-alt"></i>
+        <strong>Privacy First:</strong> Your information is secure and will only be used for service delivery.
+      </div>
+      
+      <div class="selected-package" id="selectedPackageText">Basic VPN Package</div>
+      
+      <form id="packageForm" action="https://formspree.io/f/xeorjvdr" method="POST">
+        <div class="form-group">
+          <label for="customerName">Your Name</label>
+          <input type="text" id="customerName" name="customerName" placeholder="Enter your full name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="customerEmail">Email Address</label>
+          <input type="email" id="customerEmail" name="customerEmail" placeholder="Enter your email address" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="customerPhone">Phone Number</label>
+          <input type="tel" id="customerPhone" name="customerPhone" placeholder="Enter your phone number" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Current Provider</label>
+          <div class="provider-options">
+            <div class="provider-option">
+              <input type="radio" id="airtel" name="provider" value="Airtel">
+              <label for="airtel">
+                <div class="provider-icon airtel">A</div>
+                Airtel
+              </label>
+            </div>
+            <div class="provider-option">
+              <input type="radio" id="dialog" name="provider" value="Dialog">
+              <label for="dialog">
+                <div class="provider-icon dialog">D</div>
+                Dialog
+              </label>
+            </div>
+            <div class="provider-option">
+              <input type="radio" id="mobitel" name="provider" value="Mobitel">
+              <label for="mobitel">
+                <div class="provider-icon mobitel">M</div>
+                Mobitel
+              </label>
+            </div>
+            <div class="provider-option">
+              <input type="radio" id="hutch" name="provider" value="Hutch">
+              <label for="hutch">
+                <div class="provider-icon hutch">H</div>
+                Hutch
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Data Package</label>
+          <div class="package-options">
+            <div class="package-option" data-price="100">
+              <input type="radio" id="package-50gb" name="dataPackage" value="50GB">
+              <label for="package-50gb">
+                <div class="data-amount">50GB</div>
+                <div class="data-price">Rs 100/=</div>
+              </label>
+            </div>
+            <div class="package-option" data-price="200">
+              <input type="radio" id="package-100gb" name="dataPackage" value="100GB">
+              <label for="package-100gb">
+                <div class="data-amount">100GB</div>
+                <div class="data-price">Rs 200/=</div>
+              </label>
+            </div>
+            <div class="package-option" data-price="450">
+              <input type="radio" id="package-unlimited" name="dataPackage" value="Unlimited">
+              <label for="package-unlimited">
+                <div class="data-amount">Unlimited</div>
+                <div class="data-price">Rs 450/=</div>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Airtel Zero Packages (Hidden by default) -->
+          <div class="airtel-zero-packages" id="airtelZeroPackages">
+            <h3><i class="fas fa-star"></i> Airtel Zero Packages</h3>
+            <div class="package-options">
+              <div class="package-option" data-price="200">
+                <input type="radio" id="airtel-50gb" name="dataPackage" value="Airtel Zero 50GB">
+                <label for="airtel-50gb">
+                  <div class="data-amount">50GB</div>
+                  <div class="data-price">Rs 200/=</div>
+                </label>
+              </div>
+              <div class="package-option" data-price="400">
+                <input type="radio" id="airtel-100gb" name="dataPackage" value="Airtel Zero 100GB">
+                <label for="airtel-100gb">
+                  <div class="data-amount">100GB</div>
+                  <div class="data-price">Rs 400/=</div>
+                </label>
+              </div>
+              <div class="package-option" data-price="650">
+                <input type="radio" id="airtel-unlimited" name="dataPackage" value="Airtel Zero Unlimited">
+                <label for="airtel-unlimited">
+                  <div class="data-amount">Unlimited</div>
+                  <div class="data-price">Rs 650/=</div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <input type="hidden" id="selectedPlan" name="selectedPlan" value="Basic VPN Package">
+        <input type="hidden" id="selectedPrice" name="selectedPrice" value="">
+        
+        <div class="selected-price-display">
+          <p>Selected Price: <span id="priceDisplay">Rs 0/=</span></p>
+        </div>
+        
+        <div class="loading" id="formLoading">
+          <div class="loading-spinner"></div>
+          <p>Submitting your selection...</p>
+        </div>
+        
+        <div class="error-message" id="formError">
+          There was an error submitting your form. Please try again.
+        </div>
+        
+        <button type="submit" class="submit-btn" id="submitBtn"><i class="fas fa-check"></i> Submit Selection</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="confirmation-modal" id="confirmationModal">
+    <div class="confirmation-content">
+      <div class="confirmation-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2>VPN Selection Confirmed!</h2>
+      <p>Thank you for selecting a V2Ray VPN package. Your details have been submitted successfully.</p>
+      
+      <div class="confirmation-details">
+        <p><strong>Selected Plan:</strong> <span id="confPlan">Basic VPN Package</span></p>
+        <p><strong>Data Package:</strong> <span id="confDataPackage">50GB</span></p>
+        <p><strong>Price:</strong> <span id="confPrice">Rs 100/=</span></p>
+        <p><strong>Name:</strong> <span id="confName">John Doe</span></p>
+        <p><strong>Email:</strong> <span id="confEmail">john@example.com</span></p>
+        <p><strong>Phone:</strong> <span id="confPhone">+1234567890</span></p>
+        <p><strong>Current Provider:</strong> <span id="confProvider">Airtel</span></p>
+      </div>
+      
+      <button class="submit-btn" id="confirmationCloseBtn"><i class="fas fa-check"></i> Great, Thank You!</button>
+    </div>
+  </div>
+
+  <script>
+    // Get modal elements
+    const confirmationModal = document.getElementById('confirmationModal');
+    const confirmationCloseBtn = document.getElementById('confirmationCloseBtn');
+    const selectedPackageText = document.getElementById('selectedPackageText');
+    const selectedPlanInput = document.getElementById('selectedPlan');
+    const selectedPriceInput = document.getElementById('selectedPrice');
+    const priceDisplay = document.getElementById('priceDisplay');
+    const packageForm = document.getElementById('packageForm');
+    const formLoading = document.getElementById('formLoading');
+    const formError = document.getElementById('formError');
+    const submitBtn = document.getElementById('submitBtn');
+    const airtelZeroPackages = document.getElementById('airtelZeroPackages');
+    
+    // Confirmation elements
+    const confPlan = document.getElementById('confPlan');
+    const confDataPackage = document.getElementById('confDataPackage');
+    const confPrice = document.getElementById('confPrice');
+    const confName = document.getElementById('confName');
+    const confEmail = document.getElementById('confEmail');
+    const confPhone = document.getElementById('confPhone');
+    const confProvider = document.getElementById('confProvider');
+    
+    let selectedPackage = 'Basic VPN Package';
+    let selectedDataPackage = '';
+    let selectedPrice = 0;
+
+    // Set initial package
+    selectedPackageText.textContent = selectedPackage;
+    selectedPlanInput.value = selectedPackage;
+
+    // Provider and package option selection
+    document.querySelectorAll('.provider-option, .package-option').forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove selected class from all options in the same group
+        const group = option.closest('.provider-options, .package-options');
+        if (group) {
+          group.querySelectorAll('.provider-option, .package-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+        }
+        
+        // Add selected class to clicked option
+        option.classList.add('selected');
+        
+        // Check the radio button
+        const radio = option.querySelector('input[type="radio"]');
+        if (radio) {
+          radio.checked = true;
+          
+          // If it's a provider option, check if it's Airtel
+          if (radio.name === 'provider') {
+            if (radio.value === 'Airtel') {
+              airtelZeroPackages.style.display = 'block';
+            } else {
+              airtelZeroPackages.style.display = 'none';
+              
+              // If Airtel packages were selected, clear them
+              document.querySelectorAll('#airtelZeroPackages input[type="radio"]').forEach(airtelRadio => {
+                airtelRadio.checked = false;
+              });
+              document.querySelectorAll('#airtelZeroPackages .package-option').forEach(airtelOption => {
+                airtelOption.classList.remove('selected');
+              });
+            }
+          }
+          
+          // If it's a data package, update the price
+          if (radio.name === 'dataPackage') {
+            selectedDataPackage = radio.value;
+            selectedPrice = option.getAttribute('data-price');
+            selectedPriceInput.value = selectedPrice;
+            priceDisplay.textContent = `Rs ${selectedPrice}/=`;
+          }
+        }
+      });
+    });
+
+    // Form submission
+    packageForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Get form values
+      const name = document.getElementById('customerName').value;
+      const email = document.getElementById('customerEmail').value;
+      const phone = document.getElementById('customerPhone').value;
+      const provider = document.querySelector('input[name="provider"]:checked');
+      const dataPackage = document.querySelector('input[name="dataPackage"]:checked');
+      
+      // Validate form
+      if (!name || !email || !phone || !provider || !dataPackage) {
+        alert('Please fill in all fields before submitting.');
+        return;
+      }
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      
+      // Show loading indicator
+      submitBtn.style.display = 'none';
+      formLoading.style.display = 'block';
+      formError.style.display = 'none';
+      
+      try {
+        // Generate a unique order ID
+        const orderId = generateOrderId();
+        
+        // Send to Discord webhook
+        await sendToDiscord({
+          name: name,
+          email: email,
+          phone: phone,
+          provider: provider.value,
+          dataPackage: dataPackage.value,
+          selectedPlan: selectedPackage,
+          price: selectedPrice,
+          timestamp: new Date().toLocaleString(),
+          ip: await getClientIP(),
+          orderId: orderId
+        });
+        
+        // Also submit to Formspree (optional)
+        try {
+          const formspreeResponse = await fetch(packageForm.action, {
+            method: 'POST',
+            body: new FormData(packageForm),
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+          
+          if (!formspreeResponse.ok) {
+            console.warn('Formspree submission failed, but Discord notification sent');
+          }
+        } catch (formspreeError) {
+          console.warn('Formspree submission failed:', formspreeError);
+        }
+        
+        // Set confirmation details
+        confPlan.textContent = selectedPackage;
+        confDataPackage.textContent = dataPackage.value;
+        confPrice.textContent = `Rs ${selectedPrice}/=`;
+        confName.textContent = name;
+        confEmail.textContent = email;
+        confPhone.textContent = phone;
+        confProvider.textContent = provider.value;
+        
+        // Show confirmation modal
+        confirmationModal.style.display = 'flex';
+        
+      } catch (error) {
+        console.error('Error:', error);
+        formError.style.display = 'block';
+        formError.textContent = 'There was an error submitting your form. Please try again.';
+      } finally {
+        // Hide loading indicator
+        submitBtn.style.display = 'flex';
+        formLoading.style.display = 'none';
+      }
+    });
+
+    // Generate a unique order ID
+    function generateOrderId() {
+      const timestamp = Date.now().toString(36);
+      const random = Math.random().toString(36).substring(2, 8);
+      return `VPN-${timestamp}-${random}`.toUpperCase();
+    }
+
+    // Get client IP (for admin monitoring)
+    async function getClientIP() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        return 'Unable to retrieve IP';
+      }
+    }
+
+    // Enhanced Discord webhook function with admin approval buttons
+    async function sendToDiscord(formData) {
+      // REPLACE THIS WITH YOUR ACTUAL DISCORD WEBHOOK URL
+      const webhookURL = 'https://discord.com/api/webhooks/1422227415710699590/jWHNYtFIc5sbxuAKmhKxjxXhll_kdOnCAUa7-eEEdcIvQK6D7Twc6zWEHeBrxCinqSFE';
+      
+      // Determine color based on package price
+      let embedColor = 0x00b4db; // Default blue
+      if (formData.price >= 400) embedColor = 0xf72585; // Pink for high value
+      if (formData.price >= 650) embedColor = 0x4cc9f0; // Cyan for premium
+      
+      const embed = {
+        title: '📦 New VPN Package Order',
+        color: embedColor,
+        thumbnail: {
+          url: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png'
+        },
+        fields: [
+          {
+            name: '👤 Customer Information',
+            value: `**Name:** ${formData.name}\n**Email:** ${formData.email}\n**Phone:** ${formData.phone}`,
+            inline: false
+          },
+          {
+            name: '📊 Order Details',
+            value: `**Package:** ${formData.selectedPlan}\n**Data:** ${formData.dataPackage}\n**Provider:** ${formData.provider}`,
+            inline: true
+          },
+          {
+            name: '💰 Payment Information',
+            value: `**Amount:** Rs ${formData.price}/=\n**Status:** ⏳ Pending\n**Priority:** ${formData.price > 200 ? '🚀 High' : '📝 Normal'}`,
+            inline: true
+          },
+          {
+            name: '🌐 Technical Details',
+            value: `**IP:** ${formData.ip}\n**Time:** ${formData.timestamp}\n**Order ID:** ${formData.orderId}`,
+            inline: false
+          }
+        ],
+        timestamp: new Date().toISOString(),
+        footer: {
+          text: 'VPN Service • Automated Notification System'
+        }
+      };
+      
+      // Create action buttons using Discord components
+      const components = {
+        type: 1,
+        components: [
+          {
+            type: 2,
+            label: "✅ Approve",
+            style: 3, // Green button
+            custom_id: `approve_${formData.orderId}`
+          },
+          {
+            type: 2,
+            label: "❌ Reject",
+            style: 4, // Red button
+            custom_id: `reject_${formData.orderId}`
+          },
+          {
+            type: 2,
+            label: "📋 View Details",
+            style: 2, // Gray button
+            custom_id: `details_${formData.orderId}`
+          }
+        ]
+      };
+      
+      // Add @mentions for high-value orders (customize based on your needs)
+      let content = '';
+      if (formData.price >= 400) {
+        content = '<@&1383645957211820142>'; // Replace with your admin role ID
+      }
+      
+      const response = await fetch(webhookURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: content,
+          embeds: [embed],
+          components: [components],
+          username: 'VPN Order Bot',
+          avatar_url: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png'
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Discord webhook failed');
+      }
+      
+      return response;
+    }
+
+    // Close confirmation modal
+    confirmationCloseBtn.addEventListener('click', () => {
+      confirmationModal.style.display = 'none';
+      // Reset form after successful submission
+      packageForm.reset();
+      document.querySelectorAll('.provider-option, .package-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      priceDisplay.textContent = 'Rs 0/=';
+      airtelZeroPackages.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === confirmationModal) {
+        confirmationModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

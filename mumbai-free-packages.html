@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Packages</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f8fb;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 40px;
+      color: #333;
+      animation: fadeInDown 1s ease;
+    }
+    .package-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+    .package-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeUp 0.8s forwards;
+    }
+    /* Stagger effect */
+    .package-card:nth-child(1) { animation-delay: 0.2s; }
+    .package-card:nth-child(2) { animation-delay: 0.4s; }
+    .package-card:nth-child(3) { animation-delay: 0.6s; }
+    .package-card:nth-child(4) { animation-delay: 0.8s; }
+    .package-card:nth-child(5) { animation-delay: 1s; }
+    .package-card:nth-child(6) { animation-delay: 1.2s; }
+    .package-card:nth-child(7) { animation-delay: 1.4s; }
+    .package-card:nth-child(8) { animation-delay: 1.6s; }
+
+    .package-card:hover {
+      transform: translateY(-8px) scale(1.03) rotateX(5deg) rotateY(5deg);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+    .package-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #222;
+    }
+    .package-price {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    ul li {
+      margin: 8px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    ul li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #007bff;
+      font-weight: bold;
+    }
+    a.back-btn {
+      display: block;
+      text-align: center;
+      margin: 40px auto 0;
+      width: fit-content;
+      padding: 12px 25px;
+      background: #007bff;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    a.back-btn:hover {
+      background: #0056b3;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      width: 300px;
+      animation: fadeInDown 0.5s ease;
+    }
+    .modal h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .modal button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .copy-btn {
+      background: #007bff;
+      color: white;
+    }
+    .copy-btn:hover {
+      background: #0056b3;
+    }
+    .download-btn {
+      background: #28a745;
+      color: white;
+    }
+    .download-btn:hover {
+      background: #1e7e34;
+    }
+    .close-btn {
+      background: #dc3545;
+      color: white;
+    }
+    .close-btn:hover {
+      background: #a71d2a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Our Free Packages</h1>
+    <div class="package-grid">
+      <div class="package-card" data-package="free-package-1">
+        <div class="package-title">Free Package 1</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>1 vCPU</li>
+          <li>1GB RAM</li>
+          <li>10GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+      <div class="package-card" data-package="free-package-2">
+        <div class="package-title">Free Package 2</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>1 vCPU</li>
+          <li>2GB RAM</li>
+          <li>20GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+      <div class="package-card" data-package="free-package-3">
+        <div class="package-title">Free Package 3</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>2 vCPU</li>
+          <li>2GB RAM</li>
+          <li>30GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+      <div class="package-card" data-package="free-package-4">
+        <div class="package-title">Free Package 4</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>2 vCPU</li>
+          <li>4GB RAM</li>
+          <li>40GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+      <div class="package-card" data-package="free-package-5">
+        <div class="package-title">Free Package 5</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>4 vCPU</li>
+          <li>4GB RAM</li>
+          <li>50GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+      <div class="package-card" data-package="free-package-6">
+        <div class="package-title">Free Package 6</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>4 vCPU</li>
+          <li>8GB RAM</li>
+          <li>60GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+      <div class="package-card" data-package="free-package-7">
+        <div class="package-title">Free Package 7</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>6 vCPU</li>
+          <li>12GB RAM</li>
+          <li>80GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+      <div class="package-card" data-package="free-package-8">
+        <div class="package-title">Free Package 8</div>
+        <div class="package-price">$0/month</div>
+        <ul>
+          <li>8 vCPU</li>
+          <li>16GB RAM</li>
+          <li>100GB SSD</li>
+          <li>Free Bandwidth</li>
+        </ul>
+      </div>
+    </div>
+    <a href="index.html" class="back-btn">⬅ Back to Home</a>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="optionModal">
+    <div class="modal-content">
+      <h2>Choose an option</h2>
+      <button class="copy-btn">Copy Text</button>
+      <button class="download-btn">Download Text</button>
+      <button class="close-btn">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('optionModal');
+    const copyBtn = modal.querySelector('.copy-btn');
+    const downloadBtn = modal.querySelector('.download-btn');
+    const closeBtn = modal.querySelector('.close-btn');
+    let selectedPackage = '';
+
+    document.querySelectorAll('.package-card').forEach(card => {
+      card.addEventListener('click', () => {
+        selectedPackage = card.getAttribute('data-package');
+        modal.style.display = 'flex';
+      });
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(selectedPackage).then(() => {
+        alert(selectedPackage + ' copied to clipboard!');
+      });
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const blob = new Blob([selectedPackage], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = selectedPackage + '.txt';
+      link.click();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
